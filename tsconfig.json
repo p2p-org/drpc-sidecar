@@ -11,7 +11,8 @@
     "baseUrl": "./src",
     "module": "ES2020",
     "moduleResolution": "Node",
-    "paths": {}
+    "paths": {},
+    "outDir": "./build"
   },
   "include": ["./src/**/*.ts"]
 }
