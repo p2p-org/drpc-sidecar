@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "baseUrl": "./src",
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "paths": {}
+  },
+  "include": ["./src/**/*.ts"]
+}
