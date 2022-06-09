@@ -1,0 +1,19 @@
+{
+  "name": "drpc-sidecar",
+  "version": "0.1.0",
+  "description": "Sidecar for DRPC proxy, that make DRPC look like simple JSON RPC provider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/p2p-org/drpc-sidecar.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/p2p-org/drpc-sidecar/issues"
+  },
+  "homepage": "https://github.com/p2p-org/drpc-sidecar#readme"
+}
