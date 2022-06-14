@@ -31,7 +31,7 @@ function urlParamsToSettings(query: string): ProviderSettings {
       throw new Error('Provider ids should not empty');
     }
   } else {
-    throw new Error('Povider ids should be an array');
+    throw new Error('Provider ids should be an array');
   }
 
   return {
