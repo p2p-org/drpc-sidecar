@@ -23,7 +23,7 @@
     "ts-node": "^10.8.1"
   },
   "dependencies": {
-    "drpc-sdk": "0.2.4",
+    "drpc-sdk": "0.3.7",
     "qs": "^6.10.5"
   }
 }
