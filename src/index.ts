@@ -1,11 +1,5 @@
 import http from 'http';
-import {
-  provider,
-  ProviderSettings,
-  makeRequest,
-  makeRequestMulti,
-  JSONRpc,
-} from 'drpc-sdk';
+import { ProviderSettings, JSONRpc, HTTPApi } from 'drpc-sdk';
 import qs from 'qs';
 
 const HOST = process.env.DRPC_SIDECAR_HOST || 'localhost';
@@ -13,7 +7,7 @@ const PORT = process.env.DRPC_SIDECAR_PORT
   ? parseInt(process.env.DRPC_SIDECAR_PORT)
   : 8999;
 
-const DRPC_URL = process.env.DRPC_SIDECAR_URL || 'http://localhost:8090/rpc';
+const DRPC_URL = process.env.DRPC_SIDECAR_URL || 'http://localhost:8090';
 
 function urlParamsToSettings(query: string): ProviderSettings {
   const parsed = qs.parse(query.replace(/\?/gi, ''));
@@ -112,14 +106,14 @@ const requestListener: http.RequestListener = async function (
   try {
     let rpcurl = new URL(qurl);
     const settings = urlParamsToSettings(rpcurl.search);
-    const state = provider(settings);
+    const api = new HTTPApi(settings);
 
     let body = await getBody(request);
     let result: any;
     if (body instanceof Array) {
-      result = await makeRequestMulti(parseBody(body), state);
+      result = await api.callMulti(parseBody(body));
     } else {
-      result = await makeRequest(parseBody(body)[0], state);
+      result = await api.call(parseBody(body)[0]);
     }
     response.statusCode = 200;
     response.end(JSON.stringify(result));
