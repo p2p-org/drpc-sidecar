@@ -44,6 +44,9 @@ To start with docker
 ## Server config
 
 Config enabled through env vars:
+
 `DRPC_SIDECAR_HOST` — server host, default: localhost
+
 `DRPC_SIDECAR_PORT` — server port, default: 8999
+
 `DRPC_SIDECAR_URL` — url to DRPC-proxy
