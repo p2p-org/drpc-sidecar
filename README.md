@@ -50,3 +50,5 @@ Config enabled through env vars:
 `DRPC_SIDECAR_PORT` — server port, default: 8999
 
 `DRPC_SIDECAR_URL` — url to DRPC-proxy
+
+`DRPC_SIDECAR_RPC_PROVIDER` — url to RPC-provider for test mode
