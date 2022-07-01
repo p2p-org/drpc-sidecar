@@ -142,20 +142,20 @@ const server = http.createServer(async (request, response) => {
   } else if (rpcurl.pathname === '/test') {
     requester(request, rpcurl).catch((e) => console.log(e));
     let url = new URL(RPC_PROVIDER);
-    console.log(RPC_PROVIDER, {
-      protocol: url.protocol,
-      host: url.host,
-      path: url.pathname,
-      method: request.method,
-      headers: request.headers,
-    });
     let proxy = https.request(
       {
         protocol: url.protocol,
         host: url.host,
         path: url.pathname,
         method: request.method,
-        headers: request.headers,
+        headers: Object.entries(request.headers)
+          .filter(([name]) => {
+            return !['host'].includes(name.toLowerCase());
+          })
+          .reduce((acc, [name, val]) => {
+            acc[name] = val;
+            return acc;
+          }, {} as any),
       },
       (res) => {
         res.pipe(response);
