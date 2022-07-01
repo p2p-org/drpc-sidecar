@@ -127,7 +127,7 @@ const server = http.createServer(async (request, response) => {
     sendError(response, 'Internal server error');
     return;
   }
-  if (rpcurl.pathname === '/ogrpc') {
+  if (rpcurl.pathname === '/') {
     try {
       let result = await requester(request, rpcurl);
       response.statusCode = 200;
@@ -139,7 +139,7 @@ const server = http.createServer(async (request, response) => {
         sendError(response, 'Internal server error');
       }
     }
-  } else if (rpcurl.pathname === '/ogrpc/test') {
+  } else if (rpcurl.pathname === '/test') {
     requester(request, rpcurl).catch((e) => console.log(e));
     let url = new URL(RPC_PROVIDER);
     console.log(RPC_PROVIDER, {
