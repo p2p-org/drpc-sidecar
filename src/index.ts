@@ -9,7 +9,7 @@ const PORT = process.env.DRPC_SIDECAR_PORT
   : 8999;
 const RPC_PROVIDER = process.env.DRPC_SIDECAR_RPC_PROVIDER || '';
 
-const DRPC_URL = process.env.DRPC_SIDECAR_URL || 'http://localhost:8090';
+const DRPC_URL = process.env.DRPC_SIDECAR_URL || 'https://main.drpc.org';
 
 function urlParamsToSettings(query: string): ProviderSettings {
   const parsed = qs.parse(query.replace(/\?/gi, ''));
