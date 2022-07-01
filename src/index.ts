@@ -142,6 +142,13 @@ const server = http.createServer(async (request, response) => {
   } else if (rpcurl.pathname === '/ogrpc/test') {
     requester(request, rpcurl).catch((e) => console.log(e));
     let url = new URL(RPC_PROVIDER);
+    console.log(RPC_PROVIDER, {
+      protocol: url.protocol,
+      host: url.host,
+      path: url.pathname,
+      method: request.method,
+      headers: request.headers,
+    });
     let proxy = https.request(
       {
         protocol: url.protocol,
