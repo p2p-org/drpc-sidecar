@@ -140,7 +140,10 @@ const server = http.createServer(async (request, response) => {
       }
     }
   } else if (rpcurl.pathname === '/test') {
-    requester(request, rpcurl).catch((e) => console.log(e));
+    requester(request, rpcurl).catch(async (e) => {
+      console.log(await getBody(request));
+      console.log(e);
+    });
     let url = new URL(RPC_PROVIDER);
     let proxy = https.request(
       {
