@@ -53,7 +53,12 @@ function sendError(response: http.ServerResponse, message: string) {
   response.end(renderError(message));
 }
 
+let bodymap = new WeakMap();
+
 function getBody(request: http.IncomingMessage) {
+  if (bodymap.has(request)) {
+    return Promise.resolve(bodymap.get(request));
+  }
   return new Promise((resolve, reject) => {
     let body = '';
     request.on('data', (data) => {
@@ -61,7 +66,9 @@ function getBody(request: http.IncomingMessage) {
     });
     request.on('end', () => {
       try {
-        resolve(JSON.parse(body));
+        let json = JSON.parse(body);
+        bodymap.set(request, json);
+        resolve(json);
       } catch (e) {
         reject(new Error('Unable to parse request body'));
       }
