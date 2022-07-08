@@ -24,7 +24,7 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "drpc-sdk": "1.2.1",
+    "drpc-sdk": "1.2.2",
     "qs": "^6.10.5"
   }
 }
