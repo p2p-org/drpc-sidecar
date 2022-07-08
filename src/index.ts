@@ -48,7 +48,12 @@ function urlParamsToSettings(query: string): ProviderSettings {
 function renderError(message: string) {
   return JSON.stringify({ jsonrpc: '2.0', error: message });
 }
-function sendError(response: http.ServerResponse, message: string) {
+async function sendError(
+  request: http.IncomingMessage,
+  response: http.ServerResponse,
+  message: string
+) {
+  console.log(`Sending error: ${message}, body:`, await getBody(request));
   response.statusCode = 500;
   response.end(renderError(message));
 }
@@ -131,7 +136,7 @@ const server = http.createServer(async (request, response) => {
 
   const rpcurl = getUrl(request);
   if (!rpcurl) {
-    sendError(response, 'Internal server error');
+    sendError(request, response, 'Internal server error');
     return;
   }
   if (rpcurl.pathname === '/') {
@@ -141,9 +146,9 @@ const server = http.createServer(async (request, response) => {
       response.end(JSON.stringify(result));
     } catch (e) {
       if (e instanceof Error) {
-        sendError(response, e.message);
+        sendError(request, response, e.message);
       } else {
-        sendError(response, 'Internal server error');
+        sendError(request, response, 'Internal server error');
       }
     }
   } else if (rpcurl.pathname === '/test') {
@@ -168,9 +173,15 @@ const server = http.createServer(async (request, response) => {
           }, {} as any),
       },
       (res) => {
+        if (res.statusCode !== 200) {
+          console.log(`Proxy response error: ${res.statusCode}`, res.headers);
+        }
         res.pipe(response);
       }
     );
+    proxy.on('error', (error) => {
+      console.log(`Proxy error:`, error);
+    });
     request.pipe(proxy);
   } else {
     response.statusCode = 404;
