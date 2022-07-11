@@ -38,7 +38,7 @@ function urlParamsToSettings(query: string): ProviderSettings {
     timeout:
       typeof parsed.timeout === 'string' && parseInt(parsed.timeout)
         ? parseInt(parsed.timeout)
-        : undefined,
+        : 15000,
     provider_num:
       typeof parsed.provider_num === 'string' && parseInt(parsed.provider_num)
         ? parseInt(parsed.provider_num)
