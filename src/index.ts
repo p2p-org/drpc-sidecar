@@ -2,6 +2,7 @@ import http from 'http';
 import https from 'https';
 import { ProviderSettings, JSONRpc, HTTPApi } from 'drpc-sdk';
 import qs from 'qs';
+import { metricServer } from './metrics.js';
 
 const HOST = process.env.DRPC_SIDECAR_HOST || 'localhost';
 const PORT = process.env.DRPC_SIDECAR_PORT
@@ -10,6 +11,11 @@ const PORT = process.env.DRPC_SIDECAR_PORT
 const RPC_PROVIDER = process.env.DRPC_SIDECAR_RPC_PROVIDER || '';
 
 const DRPC_URL = process.env.DRPC_SIDECAR_URL || 'https://main.drpc.org';
+
+const METRICS_HOST = process.env.DRPC_METRICS_HOST || '';
+const METRICS_PORT = process.env.DRPC_METRICS_PORT
+  ? parseInt(process.env.DRPC_METRICS_PORT)
+  : 9090;
 
 function urlParamsToSettings(query: string): ProviderSettings {
   const parsed = qs.parse(query.replace(/\?/gi, ''));
@@ -192,3 +198,11 @@ const server = http.createServer(async (request, response) => {
 server.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
+
+if (METRICS_HOST) {
+  metricServer.listen(METRICS_PORT, METRICS_HOST, () => {
+    console.log(
+      `Metric server is running on http://${METRICS_HOST}:${METRICS_PORT}`
+    );
+  });
+}

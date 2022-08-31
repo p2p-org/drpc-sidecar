@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "drpc-sdk": "1.2.2",
+    "prom-client": "^14.1.0",
     "qs": "^6.10.5"
   }
 }
