@@ -1,4 +1,4 @@
-FROM node:18-alpine3.15
+FROM node:lts-alpine3.15
 RUN apk add --update --no-cache make
 COPY ./ /home/node/app
 ENV DRPC_SIDECAR_HOST=0.0.0.0
