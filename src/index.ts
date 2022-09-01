@@ -20,6 +20,9 @@ const METRICS_PORT = process.env.DRPC_METRICS_PORT
 // Checking signatures is really CPU expensive, so if you don't care — you can switch it off
 const SKIP_SIG_CHECK = !!process.env.DRPC_SKIP_SIG_CHECK;
 
+// DRPC checks response to be valid, but if we want to spare some CPU we assume it is valid
+const SKIP_RESPONSE_CHECK = !!process.env.DRPC_SKIP_RESPONSE_CHECK;
+
 function urlParamsToSettings(query: string): ProviderSettings {
   const parsed = qs.parse(query.replace(/\?/gi, ''));
   let apiKey: string;
@@ -42,6 +45,7 @@ function urlParamsToSettings(query: string): ProviderSettings {
   return {
     api_key: apiKey,
     skipSignatureCheck: SKIP_SIG_CHECK,
+    skipResponseDeepCheck: SKIP_RESPONSE_CHECK,
     provider_ids: providerIds,
     url: DRPC_URL,
     network: typeof parsed.network === 'string' ? parsed.network : undefined,
