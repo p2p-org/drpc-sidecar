@@ -33,15 +33,9 @@ function urlParamsToSettings(query: string): ProviderSettings {
     throw new Error("Can't read dkey");
   }
 
-  // TODO: Should we allow empty provider ids?
-  let providerIds: string[];
+  let providerIds: string[] | undefined = undefined;
   if (parsed.provider_ids instanceof Array) {
     providerIds = parsed.provider_ids.map((el) => el.toString());
-    if (providerIds.length === 0) {
-      throw new Error('Provider ids should not empty');
-    }
-  } else {
-    throw new Error('Provider ids should be an array');
   }
 
   // Quorum params
@@ -77,7 +71,7 @@ function urlParamsToSettings(query: string): ProviderSettings {
 
     // Fallback provider ids
     if (parsed.fallback_provider_ids instanceof Array) {
-      let fallback_provider_ids = parsed.provider_ids.map((el) =>
+      let fallback_provider_ids = parsed.fallback_provider_ids.map((el) =>
         el.toString()
       );
       fallbackObject.provider_ids = fallback_provider_ids;
@@ -103,8 +97,8 @@ function urlParamsToSettings(query: string): ProviderSettings {
         : 15000,
     quorum_from,
     quorum_of,
-    client_type,
     fallback: fallbackObject,
+    client_type,
   };
 }
 function renderError(message: string) {
