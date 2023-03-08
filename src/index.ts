@@ -1,6 +1,6 @@
 import http from 'http';
 import https from 'https';
-import { ProviderSettings, JSONRpc, HTTPApi } from 'drpc-sdk';
+import { ProviderSettings, JSONRpc, HTTPApi } from '@drpcorg/drpc-sdk';
 import qs from 'qs';
 import { metricServer } from './metrics.js';
 
@@ -25,13 +25,14 @@ const SKIP_RESPONSE_CHECK = !!process.env.DRPC_SKIP_RESPONSE_CHECK;
 
 function urlParamsToSettings(query: string): ProviderSettings {
   const parsed = qs.parse(query.replace(/\?/gi, ''));
-  let apiKey: string;
-  if (typeof parsed.api_key === 'string') {
-    apiKey = parsed.api_key;
+  let dkey: string;
+  if (typeof parsed.dkey === 'string') {
+    dkey = parsed.dkey;
   } else {
-    throw new Error("Can't read api_key");
+    throw new Error("Can't read dkey");
   }
 
+  // TODO: Should we allow empty provider ids?
   let providerIds: string[];
   if (parsed.provider_ids instanceof Array) {
     providerIds = parsed.provider_ids.map((el) => el.toString());
@@ -42,8 +43,27 @@ function urlParamsToSettings(query: string): ProviderSettings {
     throw new Error('Provider ids should be an array');
   }
 
+  // Quorum params
+  let quorum_from: number | undefined;
+  if (typeof parsed.quorum_from === 'string') {
+    quorum_from = parseInt(parsed.quorum_from);
+
+    if (isNaN(quorum_from)) {
+      throw new Error('quorum_from from should be a number');
+    }
+  }
+
+  let quorum_of: number | undefined;
+  if (typeof parsed.quorum_of === 'string') {
+    quorum_of = parseInt(parsed.quorum_of);
+
+    if (isNaN(quorum_of)) {
+      throw new Error('quorum_to from should be a number');
+    }
+  }
+
   return {
-    api_key: apiKey,
+    dkey,
     skipSignatureCheck: SKIP_SIG_CHECK,
     skipResponseDeepCheck: SKIP_RESPONSE_CHECK,
     provider_ids: providerIds,
@@ -53,10 +73,8 @@ function urlParamsToSettings(query: string): ProviderSettings {
       typeof parsed.timeout === 'string' && parseInt(parsed.timeout)
         ? parseInt(parsed.timeout)
         : 15000,
-    provider_num:
-      typeof parsed.provider_num === 'string' && parseInt(parsed.provider_num)
-        ? parseInt(parsed.provider_num)
-        : undefined,
+    quorum_from,
+    quorum_of,
   };
 }
 function renderError(message: string) {
