@@ -1,6 +1,7 @@
 import http from 'http';
 import https from 'https';
 import { ProviderSettings, JSONRpc, HTTPApi } from '@drpcorg/drpc-sdk';
+import { Fallback } from '@drpcorg/drpc-proxy';
 import qs from 'qs';
 import { metricServer } from './metrics.js';
 
@@ -62,6 +63,33 @@ function urlParamsToSettings(query: string): ProviderSettings {
     }
   }
 
+  // Fallback params
+  let fallbackObject: Fallback | undefined;
+  if (
+    typeof parsed.fallback === 'string' &&
+    (parsed.fallback.toLowerCase() === 'true' ||
+      parsed.fallback.toLowerCase() === 'false')
+  ) {
+    let enabled = parsed.fallback.toLowerCase() === 'true' ? true : false;
+    fallbackObject = {
+      enabled,
+    };
+
+    // Fallback provider ids
+    if (parsed.fallback_provider_ids instanceof Array) {
+      let fallback_provider_ids = parsed.provider_ids.map((el) =>
+        el.toString()
+      );
+      fallbackObject.provider_ids = fallback_provider_ids;
+    }
+  }
+
+  // Client type
+  let client_type: string | undefined;
+  if (typeof parsed.client_type === 'string') {
+    client_type = parsed.client_type;
+  }
+
   return {
     dkey,
     skipSignatureCheck: SKIP_SIG_CHECK,
@@ -75,6 +103,8 @@ function urlParamsToSettings(query: string): ProviderSettings {
         : 15000,
     quorum_from,
     quorum_of,
+    client_type,
+    fallback: fallbackObject,
   };
 }
 function renderError(message: string) {
