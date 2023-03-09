@@ -13,7 +13,7 @@ Configurable settings are described in [DRPC SDK documentation](https://p2p-org.
 ## Example
 
 ```
-POST http://0.0.0.0:3000/?provider_ids[]=test&api_key=apikey HTTP/1.1
+POST http://0.0.0.0:3000/?provider_ids[]=test&dkey=dkey HTTP/1.1
 content-type: application/json
 
 [{
