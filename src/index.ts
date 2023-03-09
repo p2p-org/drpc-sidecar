@@ -44,7 +44,7 @@ function urlParamsToSettings(query: string): ProviderSettings {
     quorum_from = parseInt(parsed.quorum_from);
 
     if (isNaN(quorum_from)) {
-      throw new Error('quorum_from from should be a number');
+      throw new Error('quorum_from should be a number');
     }
   }
 
@@ -53,7 +53,7 @@ function urlParamsToSettings(query: string): ProviderSettings {
     quorum_of = parseInt(parsed.quorum_of);
 
     if (isNaN(quorum_of)) {
-      throw new Error('quorum_to from should be a number');
+      throw new Error('quorum_to should be a number');
     }
   }
 
