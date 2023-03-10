@@ -1,5 +1,4 @@
 import http from 'http';
-import https from 'https';
 import { ProviderSettings, JSONRpc, HTTPApi } from '@drpcorg/drpc-sdk';
 import { Fallback } from '@drpcorg/drpc-proxy';
 import qs from 'qs';
@@ -10,7 +9,6 @@ const HOST = process.env.DRPC_SIDECAR_HOST || 'localhost';
 const PORT = process.env.DRPC_SIDECAR_PORT
   ? parseInt(process.env.DRPC_SIDECAR_PORT)
   : 8999;
-const RPC_PROVIDER = process.env.DRPC_SIDECAR_RPC_PROVIDER || '';
 
 const DRPC_URL = process.env.DRPC_SIDECAR_URL || 'https://main.drpc.org';
 
@@ -209,38 +207,6 @@ const server = http.createServer(async (request, response) => {
         sendError(request, response, 'Internal server error');
       }
     }
-  } else if (rpcurl.pathname === '/test') {
-    requester(request, rpcurl).catch(async (e) => {
-      console.log(await getBody(request));
-      console.log(e);
-    });
-    let url = new URL(RPC_PROVIDER);
-    let proxy = https.request(
-      {
-        protocol: url.protocol,
-        host: url.host,
-        path: url.pathname,
-        method: request.method,
-        headers: Object.entries(request.headers)
-          .filter(([name]) => {
-            return !['host'].includes(name.toLowerCase());
-          })
-          .reduce((acc, [name, val]) => {
-            acc[name] = val;
-            return acc;
-          }, {} as any),
-      },
-      (res) => {
-        if (res.statusCode !== 200) {
-          console.log(`Proxy response error: ${res.statusCode}`, res.headers);
-        }
-        res.pipe(response);
-      }
-    );
-    proxy.on('error', (error) => {
-      console.log(`Proxy error:`, error);
-    });
-    request.pipe(proxy);
   } else {
     response.statusCode = 404;
     response.end('');
