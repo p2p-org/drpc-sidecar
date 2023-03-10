@@ -4,6 +4,7 @@ import { ProviderSettings, JSONRpc, HTTPApi } from '@drpcorg/drpc-sdk';
 import { Fallback } from '@drpcorg/drpc-proxy';
 import qs from 'qs';
 import { metricServer } from './metrics.js';
+import { logger } from './logger.js';
 
 const HOST = process.env.DRPC_SIDECAR_HOST || 'localhost';
 const PORT = process.env.DRPC_SIDECAR_PORT
@@ -131,6 +132,7 @@ function getBody(request: http.IncomingMessage) {
         bodymap.set(request, json);
         resolve(json);
       } catch (e) {
+        logger.error(`Unable to parse request body: ${body}`);
         reject(new Error('Unable to parse request body'));
       }
     });
